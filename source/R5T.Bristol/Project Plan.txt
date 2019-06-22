@@ -1,0 +1,12 @@
+R5T.Bristol - An experimental console-app and accompanying library for capturing ISO-6346 information.
+
+ISO-6346:1995 is the standard for shipping container identification markings. Information can be found publically here:
+
+	* Wikipedia: https://en.wikipedia.org/wiki/ISO_6346
+	* ISO.org (paywall): https://www.iso.org/standard/20453.html
+
+Goals
+
+The Bristol project and library is meant to capture information from the standard in data and code, and to supply a library of functionality for working with the standard, including:
+
+	* Check-digit calculation and verification.

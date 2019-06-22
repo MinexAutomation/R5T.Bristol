@@ -1,0 +1,4 @@
+R5T.Bristol.Lib - A simple library project for the console-app R5T.Bristol
+
+Goals
+

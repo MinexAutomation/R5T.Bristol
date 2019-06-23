@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace R5T.Bristol.Lib.Extensions
+namespace R5T.Bristol.Lib.Identification.Extensions
 {
     public static class StringExtensions
     {

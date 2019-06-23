@@ -1,6 +1,7 @@
 ﻿using System;
 
-namespace R5T.Bristol.Lib
+
+namespace R5T.Bristol.Lib.Identification
 {
     /// <summary>
     /// Currently all BIC container codes end in "U"

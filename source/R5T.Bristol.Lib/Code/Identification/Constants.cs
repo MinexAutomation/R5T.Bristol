@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace R5T.Bristol.Lib
+namespace R5T.Bristol.Lib.Identification
 {
     public static class Constants
     {

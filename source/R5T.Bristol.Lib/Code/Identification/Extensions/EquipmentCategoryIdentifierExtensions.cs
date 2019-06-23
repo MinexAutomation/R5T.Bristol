@@ -1,9 +1,9 @@
 ﻿using System;
 
-using R5T.Bristol.Lib.Extensions;
+using R5T.Bristol.Lib.Identification.Extensions;
 
 
-namespace R5T.Bristol.Lib
+namespace R5T.Bristol.Lib.Identification
 {
     public static class EquipmentCategoryIdentifierExtensions
     {

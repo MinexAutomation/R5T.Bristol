@@ -3,9 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R5T.Bristol", "R5T.Bristol\R5T.Bristol.csproj", "{0DFB4B3D-13C3-4783-9AF6-4E6F44452333}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R5T.Bristol", "R5T.Bristol\R5T.Bristol.csproj", "{0DFB4B3D-13C3-4783-9AF6-4E6F44452333}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "R5T.Bristol.Lib", "R5T.Bristol.Lib\R5T.Bristol.Lib.csproj", "{ECDFFA0B-8073-4552-9F83-B86AE194CD25}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R5T.Bristol.Lib", "R5T.Bristol.Lib\R5T.Bristol.Lib.csproj", "{ECDFFA0B-8073-4552-9F83-B86AE194CD25}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Dependencies", "_Dependencies", "{3717D603-499E-411D-8CE2-5FCFAA383AF8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R5T.NetStandard.TypedString", "..\..\..\Libraries\R5T.NetStandard.TypedString\source\R5T.NetStandard.TypedString\R5T.NetStandard.TypedString.csproj", "{6282AC65-6468-4E93-BA5F-A2E724DA6E93}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "R5T.NetStandard.Types", "..\..\..\Libraries\R5T.NetStandard.Types\source\R5T.NetStandard.Types\R5T.NetStandard.Types.csproj", "{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{0DFB4B3D-13C3-4783-9AF6-4E6F44452333}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -44,5 +47,39 @@ Global
 		{ECDFFA0B-8073-4552-9F83-B86AE194CD25}.Release|x64.Build.0 = Release|Any CPU
 		{ECDFFA0B-8073-4552-9F83-B86AE194CD25}.Release|x86.ActiveCfg = Release|Any CPU
 		{ECDFFA0B-8073-4552-9F83-B86AE194CD25}.Release|x86.Build.0 = Release|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Debug|x64.Build.0 = Debug|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Debug|x86.Build.0 = Debug|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Release|x64.ActiveCfg = Release|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Release|x64.Build.0 = Release|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Release|x86.ActiveCfg = Release|Any CPU
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93}.Release|x86.Build.0 = Release|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Debug|x64.Build.0 = Debug|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Debug|x86.Build.0 = Debug|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Release|x64.ActiveCfg = Release|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Release|x64.Build.0 = Release|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Release|x86.ActiveCfg = Release|Any CPU
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6282AC65-6468-4E93-BA5F-A2E724DA6E93} = {3717D603-499E-411D-8CE2-5FCFAA383AF8}
+		{9E3CDFA5-2159-4439-B767-890ADF2BF5FC} = {3717D603-499E-411D-8CE2-5FCFAA383AF8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4C360BD8-82BF-4551-A5A3-2C1AC7D75303}
 	EndGlobalSection
 EndGlobal

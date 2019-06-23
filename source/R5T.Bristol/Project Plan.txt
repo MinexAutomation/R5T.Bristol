@@ -9,4 +9,5 @@ Goals
 
 The Bristol project and library is meant to capture information from the standard in data and code, and to supply a library of functionality for working with the standard, including:
 
+	* Owner code, category identifier, serial number, and check-digit identification classes and enumerations.
 	* Check-digit calculation and verification.

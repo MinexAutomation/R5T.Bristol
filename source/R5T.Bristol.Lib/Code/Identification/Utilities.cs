@@ -772,7 +772,8 @@ namespace R5T.Bristol.Lib.Identification
 
             var intSum = Convert.ToInt32(sum);
 
-            var checkDigit = intSum % 11;
+            var modulus11 = intSum % 11;
+            var checkDigit = modulus11 % 10;
             return checkDigit;
         }
     }

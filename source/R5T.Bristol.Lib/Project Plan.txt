@@ -2,3 +2,79 @@ R5T.Bristol.Lib - A simple library project for the console-app R5T.Bristol
 
 Goals
 
+
+Concepts:
+
+* Raw vs. Typed. I want to use typed-values for many value to better communicate function pre- and post-assumptions, but still allow operations on raw strings.
+* Validated vs. Unvalidated. Validation is an important part of creating every container identification.
+* Numeric vs. String. Several fields are numeric values, but should instead be thought of a strings. For example, serial number is numeric, but should really be alpha-numeric. However, the check-digit is really numeric.
+
+
+Identification:
+
+Container Identification - Structured vs. Unstructured, Validated vs. Unvalidated, with check-digit vs. without check-digit.
+
+* ContainerIdentification - The validated, structured, container identification, including the check-digit.
+
+* RawContainerIdentification - The typed-string containing a validated, unstructured, container identification string, including the check-digit.
+* rawContainerIdentificationValue - The string value of a validated, unstructured, container identification, including the check-digit.
+
+* RawUnvalidatedContainerIdentification - The typed-string containing an unvalidated, unstructured, container identification string, including the check-digit.
+* rawUnvalidatedContainerIdentificationValue - The string value of an unvalidated, unstructured, container identification, including the check-digit.
+
+* UncheckedContainerIdentification - The validated, fully-structured container identification, minus the check-digit.
+
+* RawUncheckedContainerIdentification - The typed-string containing a validated, unstructured, container identification string, minus the check-digit.
+* rawUncheckedContainerIdentificationValue - The string value of a validated, unstructured, container identification, minus the check-digit.
+
+* RawUnvalidatedUncheckedContainerIdentification - The typed-string containing an unvalidated, unstructured, container identification string, minus the check-digit.
+* rawUnvalidatedUncheckedContainerIdentificationValue - The string value of an unvalidated, unstructured, container identification string, minus the check-digit.
+
+Owner Code - Validated vs. Unvalidated
+
+* (DONE) OwnerCode - The typed-string containing a validated owner code string.
+* ownerCodeValue - The string value of the validated owner code.
+
+* (DONE) UnvalidatedOwnerCode - The typed-string containing an unvalidated owner-code string.
+* unvalidatedOwnerCodeValue - The string value of the unvalidated owner-code.
+
+Equipment Category - Validated vs. Unvalidated, enumeration vs. string.
+
+* (DONE) EquipmentCategory - The enumeration value of the equipment category (enumeration means implicitly validated).
+* equipmentCategoryStandardString/equipmentCategoryString - A string representation of the equipment category enumeration value, standard or otherwise.
+
+* (DONE) UnvalidatedEquipmentCategory - The stronly-typed unvalidated equipment category string.
+* unvalidatedEquipmentCategoryValue - The string value of an unvalidated equipment category.
+
+Serial Number - Validated vs. Unvalidated, integer vs. string.
+
+* (DONE) SerialNumber - The typed-string containing the validated, string serial number value.
+* serialNumberValue - The string value of the validated serial number.
+
+* (DONE) UnvalidatedSerialNumber - The typed string containing the unvalidate, string serial number value.
+* unvalidatedSerialNumberValue - The string value of the unvalidated serial number.
+
+* (DONE) SerialNumberNumeric - The typed-int containing the validated, integer serial number value.
+* serialNumberNumericValue - The integer value of the numeric serial number.
+
+* (DONE) UnvalidatedSerialNumberNumeric - The typed-int containing the unvalidated, integer serial number value.
+* unvalidatedSerialNumberNumericValue - The integer value of the unvalidated integer serial number.
+
+Check digit - Validated vs. Unvalidated, string vs. integer.
+
+* (DONE) CheckDigit - The typed-int containing the validated, integer check-digit value.
+* checkDigitValue - The integer value of the validated, check-digit.
+
+* (DONE) UnvalidatedCheckDigit - The typed-int containing the unvalidated, integer check-digit value.
+* unvalidatedCheckDigitValue - The integer value of the unvalidated, check-digit.
+
+* (DONE) CheckDigitString - The typed-string containing the validated, string check-digit value.
+* checkDigitStringValue - The string value of the numeric check-digit.
+
+* (DONE) UnvalidatedCheckDigitString - The typed-string containing the unvalidated, string check-digit value.
+* unvalidatedCheckDigitStringValue - The string value of the unvalidated integer check-digit.
+
+
+Operations:
+
+* Validation for each validated type.

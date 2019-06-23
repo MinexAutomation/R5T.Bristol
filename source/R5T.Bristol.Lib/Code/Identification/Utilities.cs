@@ -26,66 +26,101 @@ namespace R5T.Bristol.Lib.Identification
         private static readonly Regex ValidCharacterRegex = new Regex(Constants.ValidCharacterRegexPattern);
 
 
-        public static string GetStandardEquipmentCateogoryString(EquipmentCategoryIdentifier equipmentCategoryIdentifier)
+        public static int DefaultSerialNumberToNumericConverter(string serialNumberString)
         {
-            switch (equipmentCategoryIdentifier)
+            var serialNumberNumeric = Convert.ToInt32(serialNumberString);
+            return serialNumberNumeric;
+        }
+
+        public static string DefaultSerialNumberToStringConverter(int serialNumberNumeric)
+        {
+            var serialNumberString = serialNumberNumeric.ToString();
+            return serialNumberString;
+        }
+
+        public static string GetEquipmentCategoryStandardString(EquipmentCategory equipmentCategory)
+        {
+            switch (equipmentCategory)
             {
-                case EquipmentCategoryIdentifier.J:
-                    return Constants.EquipmentCategoryIdentifierJValue;
+                case EquipmentCategory.J:
+                    return Constants.EquipmentCategoryJStandardString;
 
-                case EquipmentCategoryIdentifier.U:
-                    return Constants.EquipmentCategoryIdentifierUValue;
+                case EquipmentCategory.U:
+                    return Constants.EquipmentCategoryUStandardString;
 
-                case EquipmentCategoryIdentifier.Z:
-                    return Constants.EquipmentCategoryIdentifierZValue;
+                case EquipmentCategory.Z:
+                    return Constants.EquipmentCategoryZStandardString;
 
                 default:
-                    throw new ArgumentException(EnumHelper.UnexpectedEnumerationValueMessage(equipmentCategoryIdentifier), nameof(equipmentCategoryIdentifier));
+                    throw new ArgumentException(EnumHelper.UnexpectedEnumerationValueMessage(equipmentCategory), nameof(equipmentCategory));
             }
         }
 
-        public static EquipmentCategoryIdentifier GetEquipmentCategoryIdentifier(string equipmentCategoryValue)
+        public static EquipmentCategory GetEquipmentCategory(string equipmentCategoryStandardString)
         {
-            switch (equipmentCategoryValue)
+            switch (equipmentCategoryStandardString)
             {
-                case Constants.EquipmentCategoryIdentifierJValue:
-                    return EquipmentCategoryIdentifier.J;
+                case Constants.EquipmentCategoryJStandardString:
+                    return EquipmentCategory.J;
 
-                case Constants.EquipmentCategoryIdentifierUValue:
-                    return EquipmentCategoryIdentifier.U;
+                case Constants.EquipmentCategoryUStandardString:
+                    return EquipmentCategory.U;
 
-                case Constants.EquipmentCategoryIdentifierZValue:
-                    return EquipmentCategoryIdentifier.Z;
+                case Constants.EquipmentCategoryZStandardString:
+                    return EquipmentCategory.Z;
 
                 default:
-                    throw new ArgumentException(EnumHelper.UnrecognizedEnumerationValueMessage<EquipmentCategoryIdentifier>(equipmentCategoryValue), nameof(equipmentCategoryValue));
+                    throw new ArgumentException(EnumHelper.UnrecognizedEnumerationValueMessage<EquipmentCategory>(equipmentCategoryStandardString), nameof(equipmentCategoryStandardString));
             }
         }
 
-        public static EquipmentCategoryIdentifier GetEquipmentCategoryIdentifier(EquipmentCategory equipmentCategory)
+        public static DescribedResult<bool> IsValidEquipmentCategory(string equipmentCategoryString)
         {
-            var equipmentCategoryIdentifier = Utilities.GetEquipmentCategoryIdentifier(equipmentCategory.Value);
-            return equipmentCategoryIdentifier;
-        }
-
-        public static DescribedResult<bool> IsValidEquipmentCategoryIdentifier(string equipmentCategoryValue)
-        {
-            switch (equipmentCategoryValue)
+            switch (equipmentCategoryString)
             {
-                case Constants.EquipmentCategoryIdentifierJValue:
-                case Constants.EquipmentCategoryIdentifierUValue:
-                case Constants.EquipmentCategoryIdentifierZValue:
+                case Constants.EquipmentCategoryJStandardString:
+                case Constants.EquipmentCategoryUStandardString:
+                case Constants.EquipmentCategoryZStandardString:
                     return DescribedResult.FromValue(true);
 
                 default:
-                    return DescribedResult.FromValue(false, MessageHelper.AllowedValues(Constants.EquipmentCategoryIdentifiers));
+                    return DescribedResult.FromValue(false, MessageHelper.AllowedValues(Constants.EquipmentCategoryStandardStrings));
             }
         }
 
-        public static DescribedResult<bool> IsValid(EquipmentCategory equipmentCategory)
+        public static DescribedResult<bool> IsValid(UnvalidatedEquipmentCategory unvalidatedEquipmentCategory)
         {
-            var output = Utilities.IsValidEquipmentCategoryIdentifier(equipmentCategory.Value);
+            var output = Utilities.IsValidEquipmentCategory(unvalidatedEquipmentCategory.Value);
             return output;
+        }
+
+        /// <summary>
+        /// Returns <see cref="EquipmentCategory.Unknown"/> if invalid.
+        /// </summary>
+        public static DescribedResult<bool> TryValidate(UnvalidatedEquipmentCategory unvalidatedEquipmentCategory, out EquipmentCategory equipmentCategory)
+        {
+            var isValid = Utilities.IsValid(unvalidatedEquipmentCategory);
+            if(isValid.Value)
+            {
+                equipmentCategory = Utilities.GetEquipmentCategory(unvalidatedEquipmentCategory.Value);
+            }
+            else
+            {
+                equipmentCategory = EquipmentCategory.Unknown;
+            }
+
+            return isValid;
+        }
+
+        public static EquipmentCategory Validate(UnvalidatedEquipmentCategory unvalidatedEquipmentCategory)
+        {
+            var isValid = Utilities.TryValidate(unvalidatedEquipmentCategory, out var equipmentCategory);
+            if(!isValid.Value)
+            {
+                throw new ArgumentException(isValid.Message, nameof(unvalidatedEquipmentCategory));
+            }
+
+            return equipmentCategory;
         }
 
         /// <summary>
@@ -102,10 +137,45 @@ namespace R5T.Bristol.Lib.Identification
             return DescribedResult.FromValue(true);
         }
 
+        public static DescribedResult<bool> IsValid(UnvalidatedOwnerCode unvalidatedOwnerCode)
+        {
+            var output = Utilities.IsValidOwnerCode(unvalidatedOwnerCode.Value);
+            return output;
+        }
+
         public static DescribedResult<bool> IsValid(OwnerCode ownerCode)
         {
             var output = Utilities.IsValidOwnerCode(ownerCode.Value);
             return output;
+        }
+
+        /// <summary>
+        /// Returns <see cref="OwnerCode.Invalid"/> if invalid.
+        /// </summary>
+        public static DescribedResult<bool> TryValidate(UnvalidatedOwnerCode unvalidatedOwnerCode, out OwnerCode ownerCode)
+        {
+            var isValid = Utilities.IsValid(unvalidatedOwnerCode);
+            if(isValid.Value)
+            {
+                ownerCode = new OwnerCode(unvalidatedOwnerCode.Value);
+            }
+            else
+            {
+                ownerCode = OwnerCode.Invalid;
+            }
+
+            return isValid;
+        }
+
+        public static OwnerCode Validate(UnvalidatedOwnerCode unvalidatedOwnerCode)
+        {
+            var isValid = Utilities.TryValidate(unvalidatedOwnerCode, out var ownerCode);
+            if (!isValid.Value)
+            {
+                throw new ArgumentException(isValid.Message, nameof(unvalidatedOwnerCode));
+            }
+
+            return ownerCode;
         }
 
         public static DescribedResult<bool> IsValidSerialNumber(string serialNumberValue)
@@ -119,21 +189,220 @@ namespace R5T.Bristol.Lib.Identification
             return DescribedResult.FromValue(true);
         }
 
+        public static DescribedResult<bool> IsValid(UnvalidatedSerialNumber unvalidatedSerialNumber)
+        {
+            var output = Utilities.IsValidSerialNumber(unvalidatedSerialNumber.Value);
+            return output;
+        }
+
         public static DescribedResult<bool> IsValid(SerialNumber serialNumber)
         {
             var output = Utilities.IsValidSerialNumber(serialNumber.Value);
             return output;
         }
 
-        public static DescribedResult<bool> IsValidCheckDigit(string checkDigitValue)
+        public static DescribedResult<bool> TryValidate(UnvalidatedSerialNumber unvalidatedSerialNumber, out SerialNumber serialNumber)
         {
-            var isValid = Utilities.CheckDigitRegex.IsMatch(checkDigitValue);
-            if(!isValid)
+            var isValid = Utilities.IsValid(unvalidatedSerialNumber);
+            if(isValid.Value)
             {
-                return DescribedResult.FromValue(false, $"Check digit must be a single (1) number (not a letter). Examples: 1, 2, 3.\nFound: {checkDigitValue}.");
+                serialNumber = new SerialNumber(unvalidatedSerialNumber.Value);
+            }
+            else
+            {
+                serialNumber = SerialNumber.Invalid;
+            }
+
+            return isValid;
+        }
+
+        public static SerialNumber Validate(UnvalidatedSerialNumber unvalidatedSerialNumber)
+        {
+            var isValid = Utilities.TryValidate(unvalidatedSerialNumber, out var serialNumber);
+            if(!isValid.Value)
+            {
+                throw new ArgumentException(isValid.Message, nameof(unvalidatedSerialNumber));
+            }
+
+            return serialNumber;
+        }
+
+        public static DescribedResult<bool> IsValidSerialNumber(int serialNumberNumericValue)
+        {
+            var isWithinRange = serialNumberNumericValue > -1 && serialNumberNumericValue < 1_000_000;
+            if(!isWithinRange)
+            {
+                return DescribedResult.FromValue(false, MessageHelper.AllowedRange(0, 999_999));
             }
 
             return DescribedResult.FromValue(true);
+        }
+
+        public static DescribedResult<bool> IsValid(UnvalidatedSerialNumberNumeric unvalidatedSerialNumberNumeric)
+        {
+            var output = Utilities.IsValidSerialNumber(unvalidatedSerialNumberNumeric.Value);
+            return output;
+        }
+
+        public static DescribedResult<bool> IsValid(SerialNumberNumeric serialNumberNumeric)
+        {
+            var output = Utilities.IsValidSerialNumber(serialNumberNumeric.Value);
+            return output;
+        }
+
+        public static DescribedResult<bool> TryValidate(UnvalidatedSerialNumberNumeric unvalidatedSerialNumberNumeric, out SerialNumberNumeric serialNumberNumeric)
+        {
+            var isValid = Utilities.IsValid(unvalidatedSerialNumberNumeric);
+            if (isValid.Value)
+            {
+                serialNumberNumeric = new SerialNumberNumeric(unvalidatedSerialNumberNumeric.Value);
+            }
+            else
+            {
+                serialNumberNumeric = SerialNumberNumeric.Invalid;
+            }
+
+            return isValid;
+        }
+
+        public static SerialNumberNumeric Validate(UnvalidatedSerialNumberNumeric unvalidatedSerialNumberNumeric)
+        {
+            var isValid = Utilities.TryValidate(unvalidatedSerialNumberNumeric, out var serialNumberNumeric);
+            if(!isValid.Value)
+            {
+                throw new ArgumentException(isValid.Message, nameof(unvalidatedSerialNumberNumeric));
+            }
+
+            return serialNumberNumeric;
+        }
+
+        public static UnvalidatedSerialNumberNumeric ToUnvalidatedNumeric(UnvalidatedSerialNumber unvalidatedSerialNumber, Func<string, int> converter)
+        {
+            var valueNumeric = converter(unvalidatedSerialNumber.Value);
+
+            var unvalidatedSerialNumberNumeric = new UnvalidatedSerialNumberNumeric(valueNumeric);
+            return unvalidatedSerialNumberNumeric;
+        }
+
+        public static UnvalidatedSerialNumberNumeric ToUnvalidatedNumeric(UnvalidatedSerialNumber unvalidatedSerialNumber)
+        {
+            var unvalidatedSerialNumberNumeric = Utilities.ToUnvalidatedNumeric(unvalidatedSerialNumber, Utilities.DefaultSerialNumberToNumericConverter);
+            return unvalidatedSerialNumberNumeric;
+        }
+
+        public static UnvalidatedSerialNumberNumeric ToUnvalidatedNumeric(SerialNumber serialNumber, Func<string, int> converter)
+        {
+            var valueNumeric = converter(serialNumber.Value);
+
+            var unvalidatedSerialNumberNumeric = new UnvalidatedSerialNumberNumeric(valueNumeric);
+            return unvalidatedSerialNumberNumeric;
+        }
+
+        public static UnvalidatedSerialNumberNumeric ToUnvalidatedNumeric(SerialNumber serialNumber)
+        {
+            var unvalidatedSerialNumberNumeric = Utilities.ToUnvalidatedNumeric(serialNumber, Utilities.DefaultSerialNumberToNumericConverter);
+            return unvalidatedSerialNumberNumeric;
+        }
+
+        public static SerialNumberNumeric ToNumeric(UnvalidatedSerialNumber unvalidatedSerialNumber, Func<string, int> converter)
+        {
+            var unvalidatedSerialNumberNumeric = Utilities.ToUnvalidatedNumeric(unvalidatedSerialNumber, converter);
+
+            var serialNumberNumeric = Utilities.Validate(unvalidatedSerialNumberNumeric);
+            return serialNumberNumeric;
+        }
+
+        public static SerialNumberNumeric ToNumeric(UnvalidatedSerialNumber unvalidatedSerialNumber)
+        {
+            var serialNumberNumeric = Utilities.ToNumeric(unvalidatedSerialNumber, Utilities.DefaultSerialNumberToNumericConverter);
+            return serialNumberNumeric;
+        }
+
+        public static SerialNumberNumeric ToNumeric(SerialNumber serialNumber, Func<string, int> converter)
+        {
+            var unvalidatedSerialNumberNumeric = Utilities.ToUnvalidatedNumeric(serialNumber, converter);
+
+            var serialNumberNumeric = Utilities.Validate(unvalidatedSerialNumberNumeric);
+            return serialNumberNumeric;
+        }
+
+        public static SerialNumberNumeric ToNumeric(SerialNumber serialNumber)
+        {
+            var serialNumberNumeric = Utilities.ToNumeric(serialNumber, Utilities.DefaultSerialNumberToNumericConverter);
+            return serialNumberNumeric;
+        }
+
+        public static UnvalidatedSerialNumber ToUnvalidatedString(UnvalidatedSerialNumberNumeric unvalidatedSerialNumberNumeric, Func<int, string> converter)
+        {
+            var valueString = converter(unvalidatedSerialNumberNumeric.Value);
+
+            var unvalidatedSerialNumber = new UnvalidatedSerialNumber(valueString);
+            return unvalidatedSerialNumber;
+        }
+
+        public static UnvalidatedSerialNumber ToUnvalidatedString(UnvalidatedSerialNumberNumeric unvalidatedSerialNumberNumeric)
+        {
+            var unvalidatedSerialNumber = Utilities.ToUnvalidatedString(unvalidatedSerialNumberNumeric, Utilities.DefaultSerialNumberToStringConverter);
+            return unvalidatedSerialNumber;
+        }
+
+        public static UnvalidatedSerialNumber ToUnvalidatedString(SerialNumberNumeric serialNumberNumeric, Func<int, string> converter)
+        {
+            var valueString = converter(serialNumberNumeric.Value);
+
+            var unvalidatedSerialNumber = new UnvalidatedSerialNumber(valueString);
+            return unvalidatedSerialNumber;
+        }
+
+        public static UnvalidatedSerialNumber ToUnvalidatedString(SerialNumberNumeric serialNumberNumeric)
+        {
+            var unvalidatedSerialNumber = Utilities.ToUnvalidatedString(serialNumberNumeric, Utilities.DefaultSerialNumberToStringConverter);
+            return unvalidatedSerialNumber;
+        }
+
+        public static SerialNumber ToString(UnvalidatedSerialNumberNumeric unvalidatedSerialNumberNumeric, Func<int, string> converter)
+        {
+            var unvalidatedSerialNumber = Utilities.ToUnvalidatedString(unvalidatedSerialNumberNumeric, converter);
+
+            var serialNumber = Utilities.Validate(unvalidatedSerialNumber);
+            return serialNumber;
+        }
+
+        public static SerialNumber ToString(UnvalidatedSerialNumberNumeric unvalidatedSerialNumberNumeric)
+        {
+            var serialNumber = Utilities.ToString(unvalidatedSerialNumberNumeric, Utilities.DefaultSerialNumberToStringConverter);
+            return serialNumber;
+        }
+
+        public static SerialNumber ToString(SerialNumberNumeric serialNumberNumeric, Func<int, string> converter)
+        {
+            var unvalidatedSerialNumber = Utilities.ToUnvalidatedString(serialNumberNumeric, converter);
+
+            var serialNumber = Utilities.Validate(unvalidatedSerialNumber);
+            return serialNumber;
+        }
+
+        public static SerialNumber ToString(SerialNumberNumeric serialNumberNumeric)
+        {
+            var serialNumber = Utilities.ToString(serialNumberNumeric, Utilities.DefaultSerialNumberToStringConverter);
+            return serialNumber;
+        }
+
+        public static DescribedResult<bool> IsValidCheckDigit(int checkDigitValue)
+        {
+            var isValid = checkDigitValue > -1 && checkDigitValue < 10;
+            if(!isValid)
+            {
+                return DescribedResult.FromValue(false, $"Check digit must be a single (1) number (not a letter) between 0 and 9. Examples: 1, 2, 3.\nFound: {checkDigitValue}.");
+            }
+
+            return DescribedResult.FromValue(true);
+        }
+
+        public static DescribedResult<bool> IsValid(UnvalidatedCheckDigit unvalidatedCheckDigit)
+        {
+            var output = Utilities.IsValidCheckDigit(unvalidatedCheckDigit.Value);
+            return output;
         }
 
         public static DescribedResult<bool> IsValid(CheckDigit checkDigit)
@@ -141,6 +410,82 @@ namespace R5T.Bristol.Lib.Identification
             var output = Utilities.IsValidCheckDigit(checkDigit.Value);
             return output;
         }
+
+        public static DescribedResult<bool> TryValidate(UnvalidatedCheckDigit unvalidatedCheckDigit, out CheckDigit checkDigit)
+        {
+            var isValid = Utilities.IsValid(unvalidatedCheckDigit);
+            if(isValid.Value)
+            {
+                checkDigit = new CheckDigit(unvalidatedCheckDigit.Value);
+            }
+            else
+            {
+                checkDigit = CheckDigit.Invalid;
+            }
+
+            return isValid;
+        }
+
+        public static CheckDigit Validate(UnvalidatedCheckDigit unvalidatedCheckDigit)
+        {
+            var isValid = Utilities.TryValidate(unvalidatedCheckDigit, out var checkDigit);
+            if(!isValid.Value)
+            {
+                throw new ArgumentException(isValid.Message, nameof(unvalidatedCheckDigit));
+            }
+
+            return checkDigit;
+        }
+
+        public static DescribedResult<bool> IsValidCheckDigit(string checkDigitStringValue)
+        {
+            var isValid = Utilities.CheckDigitRegex.IsMatch(checkDigitStringValue);
+            if (!isValid)
+            {
+                return DescribedResult.FromValue(false, $"Check digit must be a single (1) number (not a letter). Examples: 1, 2, 3.\nFound: {checkDigitStringValue}.");
+            }
+
+            return DescribedResult.FromValue(true);
+        }
+
+        public static DescribedResult<bool> IsValid(UnvalidatedCheckDigitString unvalidatedCheckDigitString)
+        {
+            var output = Utilities.IsValidCheckDigit(unvalidatedCheckDigitString.Value);
+            return output;
+        }
+
+        public static DescribedResult<bool> IsValid(CheckDigitString checkDigitString)
+        {
+            var output = Utilities.IsValidCheckDigit(checkDigitString.Value);
+            return output;
+        }
+
+        public static DescribedResult<bool> TryValidate(UnvalidatedCheckDigitString unvalidatedCheckDigitString, out CheckDigitString checkDigitString)
+        {
+            var isValid = Utilities.IsValid(unvalidatedCheckDigitString);
+            if(isValid.Value)
+            {
+                checkDigitString = new CheckDigitString(unvalidatedCheckDigitString.Value);
+            }
+            else
+            {
+                checkDigitString = CheckDigitString.Invalid;
+            }
+
+            return isValid;
+        }
+
+        public static CheckDigitString Validate(UnvalidatedCheckDigitString unvalidatedCheckDigitString)
+        {
+            var isValid = Utilities.TryValidate(unvalidatedCheckDigitString, out var checkDigitString);
+            if(!isValid.Value)
+            {
+                throw new ArgumentException(isValid.Message, nameof(unvalidatedCheckDigitString));
+            }
+
+            return checkDigitString;
+        }
+
 
         /// <summary>
         /// Determines whether the input character is a valid container identification marker character.
@@ -277,7 +622,13 @@ namespace R5T.Bristol.Lib.Identification
             }
         }
 
-        public static int ValueToLetterOrNumber(int value)
+        public static int GetValue(char letterOrNumber)
+        {
+            var value = Utilities.LetterOrNumberToValue(letterOrNumber);
+            return value;
+        }
+
+        public static char ValueToLetterOrNumber(int value)
         {
 
             // Using a simple, reliable, expressive switch-statement instead of a numerical computation for clarity.
@@ -400,6 +751,29 @@ namespace R5T.Bristol.Lib.Identification
                 default:
                     throw new ArgumentException($"Invalid letter or number value. Must be 0-9 (numbers) or 10-38, skipping 11, 22, and 33 (multiples of 11), (upper-case letters).\nFound: {value}.");
             }
+        }
+
+        public static char GetLetterOrNumber(int value)
+        {
+            var letterOrNumber = Utilities.ValueToLetterOrNumber(value);
+            return letterOrNumber;
+        }
+
+        public static int ComputeCheckDigit(string rawUncheckedContainerIdentificationValue)
+        {
+            var sum = 0.0; // Double.
+            for (int i = 0; i < 10; i++)
+            {
+                var character = rawUncheckedContainerIdentificationValue[i];
+                var value = Utilities.GetValue(character);
+                var summand = value * Math.Pow(2, i);
+                sum += summand;
+            }
+
+            var intSum = Convert.ToInt32(sum);
+
+            var checkDigit = intSum % 11;
+            return checkDigit;
         }
     }
 }

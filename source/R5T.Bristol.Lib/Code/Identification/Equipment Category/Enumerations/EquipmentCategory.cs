@@ -6,8 +6,13 @@ namespace R5T.Bristol.Lib.Identification
     /// <summary>
     /// Currently all BIC container codes end in "U"
     /// </summary>
-    public enum EquipmentCategoryIdentifier
+    public enum EquipmentCategory
     {
+        /// <summary>
+        /// Default value for unknown.
+        /// </summary>
+        Unknown = 0,
+
         /// <summary>
         /// For all freight containers.
         /// </summary>

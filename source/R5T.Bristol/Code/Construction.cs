@@ -11,6 +11,11 @@ namespace R5T.Bristol
             Construction.TestRegex();
         }
 
+        public static void TestContainerIdentificationCheckDigit()
+        {
+
+        }
+
         public static void TestRegex()
         {
             var testStrings = new string[]

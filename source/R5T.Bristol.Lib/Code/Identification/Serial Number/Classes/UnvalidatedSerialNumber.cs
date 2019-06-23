@@ -5,9 +5,9 @@ using R5T.NetStandard;
 
 namespace R5T.Bristol.Lib.Identification
 {
-    public class CheckDigit : TypedString
+    public class UnvalidatedSerialNumber : TypedString
     {
-        public CheckDigit(string value)
+        public UnvalidatedSerialNumber(string value)
             : base(value)
         {
         }

@@ -5,9 +5,9 @@ using R5T.NetStandard;
 
 namespace R5T.Bristol.Lib.Identification
 {
-    public class EquipmentCategory : TypedString
+    public class UnvalidatedCheckDigitString : TypedString
     {
-        public EquipmentCategory(string value)
+        public UnvalidatedCheckDigitString(string value)
             : base(value)
         {
         }

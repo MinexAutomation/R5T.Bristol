@@ -5,9 +5,9 @@ using R5T.NetStandard;
 
 namespace R5T.Bristol.Lib.Identification
 {
-    public class OwnerCode : TypedString
+    public class UnvalidatedCheckDigit : TypedInt
     {
-        public OwnerCode(string value)
+        public UnvalidatedCheckDigit(int value)
             : base(value)
         {
         }

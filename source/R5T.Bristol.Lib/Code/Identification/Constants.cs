@@ -5,14 +5,14 @@ namespace R5T.Bristol.Lib.Identification
 {
     public static class Constants
     {
-        public const string EquipmentCategoryIdentifierJValue = "J";
-        public const string EquipmentCategoryIdentifierUValue = "U";
-        public const string EquipmentCategoryIdentifierZValue = "Z";
-        public static readonly string[] EquipmentCategoryIdentifiers = new string[]
+        public const string EquipmentCategoryJStandardString = "J";
+        public const string EquipmentCategoryUStandardString = "U";
+        public const string EquipmentCategoryZStandardString = "Z";
+        public static readonly string[] EquipmentCategoryStandardStrings = new string[]
         {
-            Constants.EquipmentCategoryIdentifierJValue,
-            Constants.EquipmentCategoryIdentifierUValue,
-            Constants.EquipmentCategoryIdentifierZValue,
+            Constants.EquipmentCategoryJStandardString,
+            Constants.EquipmentCategoryUStandardString,
+            Constants.EquipmentCategoryZStandardString,
         };
 
         /// <summary>

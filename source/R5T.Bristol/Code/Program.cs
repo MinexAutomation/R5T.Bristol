@@ -1,5 +1,7 @@
 ﻿using System;
 
+using S3Construction = R5T.Bristol.AWS.S3.Construction;
+
 
 namespace R5T.Bristol
 {
@@ -7,7 +9,8 @@ namespace R5T.Bristol
     {
         static void Main(string[] args)
         {
-            Construction.SubMain();
+            //Construction.SubMain();
+            S3Construction.SubMain();
 
             //Program.SubMain();
         }

@@ -1,0 +1,3 @@
+﻿
+
+See also: https://github.com/MinexAutomation/Minex/tree/master/Source/Rhodochrosite/Experiments/AwsS3

@@ -31,5 +31,13 @@ namespace R5T.Bristol.Lib.Identification
         /// Must be a number 0-9 or an upper-case letter A-Z.
         /// </summary>
         public const string ValidCharacterRegexPattern = @"[0-9]|[A-Z]";
+        /// <summary>
+        /// Must be 3 upper-case letters, an upper-case letter, 6 numbers, and a number (11 characters).
+        /// </summary>
+        public const string CheckedContainerIdentificationRegexPattern = @"[A-Z]{3}[A-Z][0-9]{6}[0-9]";
+        /// <summary>
+        /// Must be 3 upper-case letters, an upper-case letter, 6 numbers (10 characters), without the final check digit.
+        /// </summary>
+        public const string ContainerIdentificationRegexPattern = @"[A-Z]{3}[A-Z][0-9]{6}";
     }
 }

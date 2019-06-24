@@ -5,9 +5,9 @@ using R5T.NetStandard;
 
 namespace R5T.Bristol.Lib.Identification
 {
-    public class RawUnvalidatedUncheckedContainerIdentification : TypedString
+    public class UnvalidatedRawContainerIdentification : TypedString
     {
-        public RawUnvalidatedUncheckedContainerIdentification(string value)
+        public UnvalidatedRawContainerIdentification(string value)
             : base(value)
         {
         }

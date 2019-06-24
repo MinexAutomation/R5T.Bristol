@@ -12,23 +12,23 @@ Concepts:
 
 Identification:
 
-Container Identification - Structured vs. Unstructured (Raw), Validated vs. Unvalidated, with check-digit vs. without check-digit.
+Container Identification - Structured vs. Unstructured (Raw), Validated vs. Unvalidated, with check-digit (Checked) vs. without check-digit (default).
 
-* (DONE) ContainerIdentification - The validated, structured, container identification, including the check-digit.
+* (DONE) CheckedContainerIdentification - The validated, structured, container identification, including the check-digit.
 
-* (DONE) RawContainerIdentification - The typed-string containing a validated, unstructured, container identification string, including the check-digit.
-* rawContainerIdentificationValue - The string value of a validated, unstructured, container identification, including the check-digit.
+* (DONE) RawCheckedContainerIdentification - The typed-string containing a validated, unstructured, container identification string, including the check-digit.
+* rawCheckedContainerIdentificationValue - The string value of a validated, unstructured, container identification, including the check-digit.
 
-* (DONE) RawUnvalidatedContainerIdentification - The typed-string containing an unvalidated, unstructured, container identification string, including the check-digit.
+* (DONE) RawCheckedUnvalidatedContainerIdentification - The typed-string containing an unvalidated, unstructured, container identification string, including the check-digit.
 * rawUnvalidatedContainerIdentificationValue - The string value of an unvalidated, unstructured, container identification, including the check-digit.
 
-* (DONE) UncheckedContainerIdentification - The validated, fully-structured container identification, minus the check-digit.
+* (DONE) ContainerIdentification - The validated, fully-structured container identification, minus the check-digit.
 
-* (DONE) RawUncheckedContainerIdentification - The typed-string containing a validated, unstructured, container identification string, minus the check-digit.
-* rawUncheckedContainerIdentificationValue - The string value of a validated, unstructured, container identification, minus the check-digit.
+* (DONE) RawContainerIdentification - The typed-string containing a validated, unstructured, container identification string, minus the check-digit.
+* rawContainerIdentificationValue - The string value of a validated, unstructured, container identification, minus the check-digit.
 
-* (DONE) RawUnvalidatedUncheckedContainerIdentification - The typed-string containing an unvalidated, unstructured, container identification string, minus the check-digit.
-* rawUnvalidatedUncheckedContainerIdentificationValue - The string value of an unvalidated, unstructured, container identification string, minus the check-digit.
+* (DONE) RawUnvalidatedContainerIdentification - The typed-string containing an unvalidated, unstructured, container identification string, minus the check-digit.
+* rawUnvalidatedContainerIdentificationValue - The string value of an unvalidated, unstructured, container identification string, minus the check-digit.
 
 Owner Code - Validated vs. Unvalidated
 

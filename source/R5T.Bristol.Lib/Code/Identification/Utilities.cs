@@ -11,32 +11,42 @@ namespace R5T.Bristol.Lib.Identification
         /// <summary>
         /// Must be three (3) upper-case letters A-Z (see <see cref="Constants.OwnerCodeRegexPattern"/>).
         /// </summary>
-        private static readonly Regex OwnerCodeRegex = new Regex(Constants.OwnerCodeRegexPattern);
+        public static readonly Regex OwnerCodeRegex = new Regex(Constants.OwnerCodeRegexPattern);
         /// <summary>
         /// Must be six (6) numbers 0-9 (see <see cref="Constants.SerialNumberRegexPattern"/>).
         /// </summary>
-        private static readonly Regex SerialNumberRegex = new Regex(Constants.SerialNumberRegexPattern);
+        public static readonly Regex SerialNumberRegex = new Regex(Constants.SerialNumberRegexPattern);
         /// <summary>
         /// Must be a number 0-9 (see <see cref="Constants.CheckDigitRegexPattern"/>).
         /// </summary>
-        private static readonly Regex CheckDigitRegex = new Regex(Constants.CheckDigitRegexPattern);
+        public static readonly Regex CheckDigitRegex = new Regex(Constants.CheckDigitRegexPattern);
         /// <summary>
         /// Must be a number 0-9 or an upper-case letter A-Z (see <see cref="Constants.ValidCharacterRegexPattern"/>).
         /// </summary>
-        private static readonly Regex ValidCharacterRegex = new Regex(Constants.ValidCharacterRegexPattern);
+        public static readonly Regex ValidCharacterRegex = new Regex(Constants.ValidCharacterRegexPattern);
+        /// <summary>
+        /// Must be 3 upper-case letters, an upper-case letter, 6 numbers, and a number (11 characters) (see <see cref="Constants.CheckedContainerIdentificationRegexPattern"/>).
+        /// </summary>
+        public static readonly Regex CheckedContainerIdentificationRegex = new Regex(Constants.CheckedContainerIdentificationRegexPattern);
+        /// <summary>
+        /// Must be 3 upper-case letters, an upper-case letter, 6 numbers (10 characters), without the final check digit (see <see cref="Constants.ContainerIdentificationRegexPattern"/>).
+        /// </summary>
+        public static readonly Regex ContainerIdentificationRegex = new Regex(Constants.ContainerIdentificationRegexPattern);
 
 
-        public static int DefaultSerialNumberToNumericConverter(string serialNumberString)
+        public static int DefaultToIntegerConverter(string alphabetic)
         {
-            var serialNumberNumeric = Convert.ToInt32(serialNumberString);
-            return serialNumberNumeric;
+            var numeric = Convert.ToInt32(alphabetic);
+            return numeric;
         }
 
-        public static string DefaultSerialNumberToStringConverter(int serialNumberNumeric)
+        public static string DefaultToStringConverter(int numeric)
         {
-            var serialNumberString = serialNumberNumeric.ToString();
-            return serialNumberString;
+            var alphabetic = Convert.ToString(numeric);
+            return alphabetic;
         }
+
+        #region Equipment Category
 
         public static string GetEquipmentCategoryStandardString(EquipmentCategory equipmentCategory)
         {
@@ -123,6 +133,10 @@ namespace R5T.Bristol.Lib.Identification
             return equipmentCategory;
         }
 
+        #endregion
+
+        #region Owner Code
+
         /// <summary>
         /// Per 3.1.1 - Owner code must be three (3) capital letters (not numbers).
         /// </summary>
@@ -177,6 +191,10 @@ namespace R5T.Bristol.Lib.Identification
 
             return ownerCode;
         }
+
+        #endregion
+
+        #region Serial Number
 
         public static DescribedResult<bool> IsValidSerialNumber(string serialNumberValue)
         {
@@ -276,51 +294,31 @@ namespace R5T.Bristol.Lib.Identification
             return serialNumberNumeric;
         }
 
-        public static UnvalidatedSerialNumberNumeric ToUnvalidatedNumeric(UnvalidatedSerialNumber unvalidatedSerialNumber, Func<string, int> converter)
+        public static int DefaultSerialNumberToNumericConverter(string serialNumberString)
         {
-            var valueNumeric = converter(unvalidatedSerialNumber.Value);
-
-            var unvalidatedSerialNumberNumeric = new UnvalidatedSerialNumberNumeric(valueNumeric);
-            return unvalidatedSerialNumberNumeric;
+            var serialNumberNumeric = Utilities.DefaultToIntegerConverter(serialNumberString);
+            return serialNumberNumeric;
         }
 
         public static UnvalidatedSerialNumberNumeric ToUnvalidatedNumeric(UnvalidatedSerialNumber unvalidatedSerialNumber)
         {
-            var unvalidatedSerialNumberNumeric = Utilities.ToUnvalidatedNumeric(unvalidatedSerialNumber, Utilities.DefaultSerialNumberToNumericConverter);
-            return unvalidatedSerialNumberNumeric;
-        }
+            var unvalidatedSerialNumberNumericValue = Utilities.DefaultSerialNumberToNumericConverter(unvalidatedSerialNumber.Value);
 
-        public static UnvalidatedSerialNumberNumeric ToUnvalidatedNumeric(SerialNumber serialNumber, Func<string, int> converter)
-        {
-            var valueNumeric = converter(serialNumber.Value);
-
-            var unvalidatedSerialNumberNumeric = new UnvalidatedSerialNumberNumeric(valueNumeric);
+            var unvalidatedSerialNumberNumeric = new UnvalidatedSerialNumberNumeric(unvalidatedSerialNumberNumericValue);
             return unvalidatedSerialNumberNumeric;
         }
 
         public static UnvalidatedSerialNumberNumeric ToUnvalidatedNumeric(SerialNumber serialNumber)
         {
-            var unvalidatedSerialNumberNumeric = Utilities.ToUnvalidatedNumeric(serialNumber, Utilities.DefaultSerialNumberToNumericConverter);
+            var unvalidatedSerialNumberNumericValue = Utilities.DefaultSerialNumberToNumericConverter(serialNumber.Value);
+
+            var unvalidatedSerialNumberNumeric = new UnvalidatedSerialNumberNumeric(unvalidatedSerialNumberNumericValue);
             return unvalidatedSerialNumberNumeric;
-        }
-
-        public static SerialNumberNumeric ToNumeric(UnvalidatedSerialNumber unvalidatedSerialNumber, Func<string, int> converter)
-        {
-            var unvalidatedSerialNumberNumeric = Utilities.ToUnvalidatedNumeric(unvalidatedSerialNumber, converter);
-
-            var serialNumberNumeric = Utilities.Validate(unvalidatedSerialNumberNumeric);
-            return serialNumberNumeric;
         }
 
         public static SerialNumberNumeric ToNumeric(UnvalidatedSerialNumber unvalidatedSerialNumber)
         {
-            var serialNumberNumeric = Utilities.ToNumeric(unvalidatedSerialNumber, Utilities.DefaultSerialNumberToNumericConverter);
-            return serialNumberNumeric;
-        }
-
-        public static SerialNumberNumeric ToNumeric(SerialNumber serialNumber, Func<string, int> converter)
-        {
-            var unvalidatedSerialNumberNumeric = Utilities.ToUnvalidatedNumeric(serialNumber, converter);
+            var unvalidatedSerialNumberNumeric = Utilities.ToUnvalidatedNumeric(unvalidatedSerialNumber);
 
             var serialNumberNumeric = Utilities.Validate(unvalidatedSerialNumberNumeric);
             return serialNumberNumeric;
@@ -328,27 +326,21 @@ namespace R5T.Bristol.Lib.Identification
 
         public static SerialNumberNumeric ToNumeric(SerialNumber serialNumber)
         {
-            var serialNumberNumeric = Utilities.ToNumeric(serialNumber, Utilities.DefaultSerialNumberToNumericConverter);
+            var unvalidatedSerialNumberNumeric = Utilities.ToUnvalidatedNumeric(serialNumber);
+
+            var serialNumberNumeric = Utilities.Validate(unvalidatedSerialNumberNumeric);
             return serialNumberNumeric;
         }
 
-        public static UnvalidatedSerialNumber ToUnvalidatedString(UnvalidatedSerialNumberNumeric unvalidatedSerialNumberNumeric, Func<int, string> converter)
+        public static string DefaultSerialNumberToStringConverter(int serialNumberNumericValue)
         {
-            var valueString = converter(unvalidatedSerialNumberNumeric.Value);
-
-            var unvalidatedSerialNumber = new UnvalidatedSerialNumber(valueString);
-            return unvalidatedSerialNumber;
+            var serialNumberString = Utilities.DefaultToStringConverter(serialNumberNumericValue);
+            return serialNumberString;
         }
 
         public static UnvalidatedSerialNumber ToUnvalidatedString(UnvalidatedSerialNumberNumeric unvalidatedSerialNumberNumeric)
         {
-            var unvalidatedSerialNumber = Utilities.ToUnvalidatedString(unvalidatedSerialNumberNumeric, Utilities.DefaultSerialNumberToStringConverter);
-            return unvalidatedSerialNumber;
-        }
-
-        public static UnvalidatedSerialNumber ToUnvalidatedString(SerialNumberNumeric serialNumberNumeric, Func<int, string> converter)
-        {
-            var valueString = converter(serialNumberNumeric.Value);
+            var valueString = Utilities.DefaultSerialNumberToStringConverter(unvalidatedSerialNumberNumeric.Value);
 
             var unvalidatedSerialNumber = new UnvalidatedSerialNumber(valueString);
             return unvalidatedSerialNumber;
@@ -356,27 +348,15 @@ namespace R5T.Bristol.Lib.Identification
 
         public static UnvalidatedSerialNumber ToUnvalidatedString(SerialNumberNumeric serialNumberNumeric)
         {
-            var unvalidatedSerialNumber = Utilities.ToUnvalidatedString(serialNumberNumeric, Utilities.DefaultSerialNumberToStringConverter);
+            var valueString = Utilities.DefaultSerialNumberToStringConverter(serialNumberNumeric.Value);
+
+            var unvalidatedSerialNumber = new UnvalidatedSerialNumber(valueString);
             return unvalidatedSerialNumber;
-        }
-
-        public static SerialNumber ToString(UnvalidatedSerialNumberNumeric unvalidatedSerialNumberNumeric, Func<int, string> converter)
-        {
-            var unvalidatedSerialNumber = Utilities.ToUnvalidatedString(unvalidatedSerialNumberNumeric, converter);
-
-            var serialNumber = Utilities.Validate(unvalidatedSerialNumber);
-            return serialNumber;
         }
 
         public static SerialNumber ToString(UnvalidatedSerialNumberNumeric unvalidatedSerialNumberNumeric)
         {
-            var serialNumber = Utilities.ToString(unvalidatedSerialNumberNumeric, Utilities.DefaultSerialNumberToStringConverter);
-            return serialNumber;
-        }
-
-        public static SerialNumber ToString(SerialNumberNumeric serialNumberNumeric, Func<int, string> converter)
-        {
-            var unvalidatedSerialNumber = Utilities.ToUnvalidatedString(serialNumberNumeric, converter);
+            var unvalidatedSerialNumber = Utilities.ToUnvalidatedString(unvalidatedSerialNumberNumeric);
 
             var serialNumber = Utilities.Validate(unvalidatedSerialNumber);
             return serialNumber;
@@ -384,9 +364,15 @@ namespace R5T.Bristol.Lib.Identification
 
         public static SerialNumber ToString(SerialNumberNumeric serialNumberNumeric)
         {
-            var serialNumber = Utilities.ToString(serialNumberNumeric, Utilities.DefaultSerialNumberToStringConverter);
+            var unvalidatedSerialNumber = Utilities.ToUnvalidatedString(serialNumberNumeric);
+
+            var serialNumber = Utilities.Validate(unvalidatedSerialNumber);
             return serialNumber;
         }
+
+        #endregion
+
+        #region Check Digit
 
         public static DescribedResult<bool> IsValidCheckDigit(int checkDigitValue)
         {
@@ -486,6 +472,267 @@ namespace R5T.Bristol.Lib.Identification
             return checkDigitString;
         }
 
+        public static int DefaultCheckDigitToNumericConverter(string checkDigitStringValue)
+        {
+            var checkDigitValue = Utilities.DefaultToIntegerConverter(checkDigitStringValue);
+            return checkDigitValue;
+        }
+
+        public static UnvalidatedCheckDigit ToUnvalidatedNumeric(UnvalidatedCheckDigitString unvalidatedCheckDigitString)
+        {
+            var unvalidatedCheckDigitValue = Utilities.DefaultCheckDigitToNumericConverter(unvalidatedCheckDigitString.Value);
+
+            var unvalidatedCheckDigit = new UnvalidatedCheckDigit(unvalidatedCheckDigitValue);
+            return unvalidatedCheckDigit;
+        }
+
+        public static UnvalidatedCheckDigit ToUnvalidatedNumeric(CheckDigitString checkDigitString)
+        {
+            var unvalidatedCheckDigitValue = Utilities.DefaultCheckDigitToNumericConverter(checkDigitString.Value);
+
+            var unvalidatedCheckDigit = new UnvalidatedCheckDigit(unvalidatedCheckDigitValue);
+            return unvalidatedCheckDigit;
+        }
+
+        public static CheckDigit ToNumeric(UnvalidatedCheckDigitString unvalidatedCheckDigitString)
+        {
+            var unvalidatedCheckDigit = Utilities.ToUnvalidatedNumeric(unvalidatedCheckDigitString);
+
+            var checkDigit = Utilities.Validate(unvalidatedCheckDigit);
+            return checkDigit;
+        }
+
+        public static CheckDigit ToNumeric(CheckDigitString checkDigitString)
+        {
+            var unvalidatedCheckDigit = Utilities.ToUnvalidatedNumeric(checkDigitString);
+
+            var checkDigit = Utilities.Validate(unvalidatedCheckDigit);
+            return checkDigit;
+        }
+
+        public static string DefaultCheckDigitToStringConverter(int checkDigitValue)
+        {
+            var checkDigitStringValue = Utilities.DefaultToStringConverter(checkDigitValue);
+            return checkDigitStringValue;
+        }
+
+        public static UnvalidatedCheckDigitString ToUnvalidatedString(UnvalidatedCheckDigit unvalidatedCheckDigit)
+        {
+            var unvalidatedCheckDigitStringValue = Utilities.DefaultCheckDigitToStringConverter(unvalidatedCheckDigit.Value);
+
+            var unvalidatedCheckDigitString = new UnvalidatedCheckDigitString(unvalidatedCheckDigitStringValue);
+            return unvalidatedCheckDigitString;
+        }
+
+        public static UnvalidatedCheckDigitString ToUnvalidatedString(CheckDigit checkDigit)
+        {
+            var unvalidatedCheckDigitStringValue = Utilities.DefaultCheckDigitToStringConverter(checkDigit.Value);
+
+            var unvalidatedCheckDigitString = new UnvalidatedCheckDigitString(unvalidatedCheckDigitStringValue);
+            return unvalidatedCheckDigitString;
+        }
+
+        public static CheckDigitString ToString(UnvalidatedCheckDigit unvalidatedCheckDigit)
+        {
+            var unvalidatedCheckDigitString = Utilities.ToUnvalidatedString(unvalidatedCheckDigit);
+
+            var checkDigitString = Utilities.Validate(unvalidatedCheckDigitString);
+            return checkDigitString;
+        }
+
+        public static CheckDigitString ToString(CheckDigit checkDigit)
+        {
+            var unvalidatedCheckDigitString = Utilities.ToUnvalidatedString(checkDigit);
+
+            var checkDigitString = Utilities.Validate(unvalidatedCheckDigitString);
+            return checkDigitString;
+        }
+
+        public static int ComputeCheckDigit(string rawUncheckedContainerIdentificationValue)
+        {
+            var sum = 0.0; // Double.
+            for (int i = 0; i < 10; i++)
+            {
+                var character = rawUncheckedContainerIdentificationValue[i];
+                var value = Utilities.GetValue(character);
+                var summand = value * Math.Pow(2, i);
+                sum += summand;
+            }
+
+            var intSum = Convert.ToInt32(sum);
+
+            var modulus11 = intSum % 11;
+            var checkDigit = modulus11 % 10;
+            return checkDigit;
+        }
+
+        #endregion
+
+        #region Raw Container Identification
+
+        public static DescribedResult<bool> IsValidRawContainerIdentification(string rawContainerIdentificationValue)
+        {
+            var isValid = Utilities.CheckedContainerIdentificationRegex.IsMatch(rawContainerIdentificationValue);
+            if(!isValid)
+            {
+                return DescribedResult.FromValue(false, $"Container identification must be 3 upper-case letters, an upper-case letter, and 6 numbers (10 characters). Example: ZEPU003725.\nFound: {rawContainerIdentificationValue}");
+            }
+
+            return DescribedResult.FromValue(true);
+        }
+
+        public static DescribedResult<bool> IsValid(UnvalidatedRawContainerIdentification unvalidatedRawContainerIdentification)
+        {
+            var output = Utilities.IsValidRawContainerIdentification(unvalidatedRawContainerIdentification.Value);
+            return output;
+        }
+
+        public static DescribedResult<bool> IsValid(RawContainerIdentification rawContainerIdentification)
+        {
+            var output = Utilities.IsValidRawContainerIdentification(rawContainerIdentification.Value);
+            return output;
+        }
+
+        public static DescribedResult<bool> TryValidate(UnvalidatedRawContainerIdentification unvalidatedRawContainerIdentification, out RawContainerIdentification rawContainerIdentification)
+        {
+            var isValid = Utilities.IsValid(unvalidatedRawContainerIdentification);
+            if(isValid.Value)
+            {
+                rawContainerIdentification = new RawContainerIdentification(unvalidatedRawContainerIdentification.Value);
+            }
+            else
+            {
+                rawContainerIdentification = RawContainerIdentification.Invalid;
+            }
+
+            return isValid;
+        }
+
+        public static RawContainerIdentification Validate(UnvalidatedRawContainerIdentification unvalidatedRawContainerIdentification)
+        {
+            var isValid = Utilities.TryValidate(unvalidatedRawContainerIdentification, out var rawContainerIdentification);
+            if(!isValid.Value)
+            {
+                throw new ArgumentException(isValid.Message, nameof(unvalidatedRawContainerIdentification));
+            }
+
+            return rawContainerIdentification;
+        }
+
+        #endregion
+
+        #region Raw Checked Container Identification
+
+        public static DescribedResult<bool> IsValidRawCheckedContainerIdentification(string rawCheckedContainerIdentificationValue)
+        {
+            var isValid = Utilities.ContainerIdentificationRegex.IsMatch(rawCheckedContainerIdentificationValue);
+            if(!isValid)
+            {
+                return DescribedResult.FromValue(false, $"Container identification must be 3 upper-case letters, an upper-case letter, 6 numbers, and a number (11 characters). Example: ZEPU0037255.\nFound: {rawCheckedContainerIdentificationValue}");
+            }
+
+            return DescribedResult.FromValue(true);
+        }
+
+        public static DescribedResult<bool> IsValid(UnvalidatedRawCheckedContainerIdentification unvalidatedRawCheckedContainerIdentification)
+        {
+            var output = Utilities.IsValidRawCheckedContainerIdentification(unvalidatedRawCheckedContainerIdentification.Value);
+            return output;
+        }
+
+        public static DescribedResult<bool> IsValid(RawCheckedContainerIdentification rawCheckedContainerIdentification)
+        {
+            var output = Utilities.IsValidRawCheckedContainerIdentification(rawCheckedContainerIdentification.Value);
+            return output;
+        }
+
+        public static DescribedResult<bool> TryValidate(UnvalidatedRawCheckedContainerIdentification unvalidatedRawCheckedContainerIdentification, out RawCheckedContainerIdentification rawCheckedContainerIdentification)
+        {
+            var isValid = Utilities.IsValid(unvalidatedRawCheckedContainerIdentification);
+            if(isValid.Value)
+            {
+                rawCheckedContainerIdentification = new RawCheckedContainerIdentification(unvalidatedRawCheckedContainerIdentification.Value);
+            }
+            else
+            {
+                rawCheckedContainerIdentification = RawCheckedContainerIdentification.Invalid;
+            }
+
+            return isValid;
+        }
+
+        public static RawCheckedContainerIdentification Validate(UnvalidatedRawCheckedContainerIdentification unvalidatedRawCheckedContainerIdentification)
+        {
+            var isValid = Utilities.TryValidate(unvalidatedRawCheckedContainerIdentification, out var rawCheckedContainerIdentification);
+            if(!isValid.Value)
+            {
+                throw new ArgumentException(isValid.Message, nameof(unvalidatedRawCheckedContainerIdentification));
+            }
+
+            return rawCheckedContainerIdentification;
+        }
+
+        #endregion
+
+        #region Container Identification
+
+        public static string GetOwnerCodeValue(string containerIdentificationValue)
+        {
+            var ownerCodeValue = containerIdentificationValue.Substring(0, 3);
+            return ownerCodeValue;
+        }
+
+        public static string GetEquipmentCategoryString(string containerIdentificationValue)
+        {
+            var equipmentCategoryValue = containerIdentificationValue.Substring(3, 1);
+            return equipmentCategoryValue;
+        }
+
+        public static string GetSerialNumberValue(string containerIdentificationValue)
+        {
+            var serialNumberValue = containerIdentificationValue.Substring(4, 6);
+            return serialNumberValue;
+        }
+
+        public static string GetCheckDigitStringValue(string checkedContainerIdentificationValue)
+        {
+            var checkDigitStringValue = checkedContainerIdentificationValue.Substring(10, 1);
+            return checkDigitStringValue;
+        }
+
+        public static void Parse(string containerIdentificationValue, out string ownerCodeValue, out string equipmentCategoryString, out string serialNumberValue)
+        {
+            ownerCodeValue = Utilities.GetOwnerCodeValue(containerIdentificationValue);
+            equipmentCategoryString = Utilities.GetEquipmentCategoryString(containerIdentificationValue);
+            serialNumberValue = Utilities.GetSerialNumberValue(containerIdentificationValue);
+        }
+
+        public static void Parse(string checkedContainerIdentificationValue, out string ownerCodeValue, out string equipmentCategoryString, out string serialNumberValue, out string checkDigitStringValue)
+        {
+            Utilities.Parse(checkedContainerIdentificationValue, out ownerCodeValue, out equipmentCategoryString, out serialNumberValue);
+
+            checkDigitStringValue = Utilities.GetCheckDigitStringValue(checkedContainerIdentificationValue);
+        }
+
+        public static ContainerIdentification Parse(RawContainerIdentification rawContainerIdentification)
+        {
+            Utilities.Parse(rawContainerIdentification.Value, out var ownerCodeValue, out var equipmentCategoryString, out var serialNumberValue);
+
+            var containerIdentification = ContainerIdentification.NewFrom(ownerCodeValue, equipmentCategoryString, serialNumberValue);
+            return containerIdentification;
+        }
+
+        public static CheckedContainerIdentification Parse(RawCheckedContainerIdentification rawContainerIdentification)
+        {
+            Utilities.Parse(rawContainerIdentification.Value, out var ownerCodeValue, out var equipmentCategoryString, out var serialNumberValue, out var checkDigitStringValue);
+
+            var containerIdentification = CheckedContainerIdentification.NewFrom(ownerCodeValue, equipmentCategoryString, serialNumberValue, checkDigitStringValue);
+            return containerIdentification;
+        }
+
+        #endregion
+
+        #region Letter to Number
 
         /// <summary>
         /// Determines whether the input character is a valid container identification marker character.
@@ -759,22 +1006,6 @@ namespace R5T.Bristol.Lib.Identification
             return letterOrNumber;
         }
 
-        public static int ComputeCheckDigit(string rawUncheckedContainerIdentificationValue)
-        {
-            var sum = 0.0; // Double.
-            for (int i = 0; i < 10; i++)
-            {
-                var character = rawUncheckedContainerIdentificationValue[i];
-                var value = Utilities.GetValue(character);
-                var summand = value * Math.Pow(2, i);
-                sum += summand;
-            }
-
-            var intSum = Convert.ToInt32(sum);
-
-            var modulus11 = intSum % 11;
-            var checkDigit = modulus11 % 10;
-            return checkDigit;
-        }
+        #endregion
     }
 }

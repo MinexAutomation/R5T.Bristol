@@ -1,20 +1,20 @@
 ﻿using System;
 
-using R5T.Bristol.Lib.Identification;
 
-
-namespace R5T.Bristol.Lib
+namespace R5T.Bristol.Lib.Identification
 {
-    public static class ContainerIdentificationExtensions
+    public static class CheckedContainerIdentificationExtensions
     {
-        public static ContainerIdentification From(this ContainerIdentification containerIdentification,
+        public static CheckedContainerIdentification From(this CheckedContainerIdentification containerIdentification,
             OwnerCode ownerCode,
             EquipmentCategory equipmentCategory,
-            SerialNumber serialNumber)
+            SerialNumber serialNumber,
+            CheckDigit checkDigit)
         {
             containerIdentification.OwnerCode = ownerCode;
             containerIdentification.EquipmentCategory = equipmentCategory;
             containerIdentification.SerialNumber = serialNumber;
+            containerIdentification.CheckDigit = checkDigit;
 
             return containerIdentification;
         }

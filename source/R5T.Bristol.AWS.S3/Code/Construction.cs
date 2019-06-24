@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 
 using Microsoft.Extensions.Configuration;
 
@@ -7,6 +8,7 @@ using Amazon;
 using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Amazon.S3.Transfer;
 using Amazon.S3.Util;
 
 
@@ -19,10 +21,124 @@ namespace R5T.Bristol.AWS.S3
             //Construction.CreateBucketSetup();
             //Construction.CreateBucket();
             //Construction.TestIfBucketExists(Construction.GenerateRandomBucketName());
-            Construction.TestIfBucketExists();
+            //Construction.TestIfBucketExists();
             //Construction.DeleteBucket();
+            //Construction.UploadFileToS3();
+            //Construction.TestIfFileExists();
+            //Construction.TestIfS3ObjectExists("DOES_NOT_EXIST");
+            Construction.DeleteObjectFromS3();
+        }
+
+        private static void DeleteObjectFromS3()
+        {
+            var configuration = Construction.GetConfiguration();
+
+            var bucketName = configuration["S3BucketName"];
+
+            var imageFilePath = configuration["ImageFilePath"];
+            var objectKey = Construction.GetKeyNameFromFilePath(imageFilePath);
+
+            using (var s3Client = Construction.GetAmazonS3Client())
+            {
+                var deleteObjectRequest = new DeleteObjectRequest
+                {
+                    BucketName = bucketName,
+                    Key = objectKey,
+                };
+
+                var deleteObjectResponse = s3Client.DeleteObjectAsync(deleteObjectRequest).Result;
+
+                Construction.DisplayDeleteObjectResponse(deleteObjectResponse);
+            }
+        }
+
+        private static void DisplayDeleteObjectResponse(DeleteObjectResponse deleteObjectResponse)
+        {
+            var writer = Console.Out;
+
+            writer.WriteLine($"{nameof(deleteObjectResponse.HttpStatusCode)}: {deleteObjectResponse.HttpStatusCode}");
+            Construction.DisplayResponseMetadata(writer, deleteObjectResponse.ResponseMetadata);
+        }
+
+        private static void TestIfFileExists()
+        {
+            var configuration = Construction.GetConfiguration();
+
+            var imageFilePath = configuration["ImageFilePath"];
+            var objectKey = Construction.GetKeyNameFromFilePath(imageFilePath);
+
+            Construction.TestIfS3ObjectExists(objectKey);
+        }
+
+        private static void TestIfS3ObjectExists(string objectKey)
+        {
+            var configuration = Construction.GetConfiguration();
+
+            var bucketName = configuration["S3BucketName"];
+
+            using (var s3Client = Construction.GetAmazonS3Client())
+            {
+                var objectExists = Construction.S3ObjectExists(s3Client, bucketName, objectKey);
+                if (objectExists)
+                {
+                    Console.WriteLine($"Object '{objectKey}' exists!");
+                }
+                else
+                {
+                    Console.WriteLine($"Object '{objectKey}' does NOT exist...");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Uses low-level ListObjects API.
+        /// </summary>
+        private static bool S3ObjectExists(IAmazonS3 s3Client, string bucketName, string objectKey)
+        {
+            var listObjectsRequest = new ListObjectsRequest
+            {
+                BucketName = bucketName,
+                Prefix = objectKey,
+                MaxKeys = 1
+            };
+
+            var listObjectsResponse = s3Client.ListObjectsAsync(listObjectsRequest).Result;
+
+            var fileExists = listObjectsResponse.S3Objects.Any();
+            return fileExists;
         }
         
+        private static void UploadFileToS3()
+        {
+            var configuration = Construction.GetConfiguration();
+
+            var bucketName = configuration["S3BucketName"];
+
+            var imageFilePath = configuration["ImageFilePath"];
+
+            using (var s3Client = Construction.GetAmazonS3Client())
+            using (var fileTransferUtility = new TransferUtility(s3Client))
+            {
+                fileTransferUtility.UploadAsync(imageFilePath, bucketName).Wait();
+            }
+        }
+
+        private static string GetKeyNameFromFilePath(string filePath)
+        {
+            var fileName = Path.GetFileName(filePath);
+
+            var keyName = Construction.GetKeyNameFromFileName(fileName);
+            return keyName;
+        }
+
+        /// <summary>
+        /// Default key-name is the same as the file-name.
+        /// </summary>
+        private static string GetKeyNameFromFileName(string fileName)
+        {
+            return fileName;
+        }
+
         private static void DeleteBucket()
         {
             var configuration = Construction.GetConfiguration();
@@ -170,8 +286,8 @@ namespace R5T.Bristol.AWS.S3
 
         private static IConfiguration GetConfiguration()
         {
-            var usersDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var configurationFilePath = Path.Combine(usersDirectoryPath, @"Dropbox\Organizations\Rivet\Data\User Secret Files\AWS-David-Rekognition.json");
+            var dropboxRivetDataDirectoryPath = Construction.GetDropboxRivetDataDirectoryPath();
+            var configurationFilePath = Path.Combine(dropboxRivetDataDirectoryPath, @"User Secret Files\AWS-David-Rekognition.json");
 
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile(configurationFilePath)
@@ -179,6 +295,22 @@ namespace R5T.Bristol.AWS.S3
                 ;
 
             return configuration;
+        }
+
+        private static string GetDropboxRivetDataDirectoryPath()
+        {
+            var dropboxDirectoryPath = Construction.GetDropboxDirectoryPath();
+
+            var dropboxRivetDataDirectoryPath = Path.Combine(dropboxDirectoryPath, @"Organizations\Rivet\Data");
+            return dropboxRivetDataDirectoryPath;
+        }
+
+        private static string GetDropboxDirectoryPath()
+        {
+            var usersDirectoryPath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+
+            var dropboxDirectoryPath = Path.Combine(usersDirectoryPath, @"Dropbox");
+            return dropboxDirectoryPath;
         }
 
         private static string GenerateRandomBucketName()

@@ -8,7 +8,6 @@ using Amazon.Runtime;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Util;
-using Amazon.Util;
 
 
 namespace R5T.Bristol.AWS.S3
@@ -21,8 +20,37 @@ namespace R5T.Bristol.AWS.S3
             //Construction.CreateBucket();
             //Construction.TestIfBucketExists(Construction.GenerateRandomBucketName());
             Construction.TestIfBucketExists();
+            //Construction.DeleteBucket();
         }
         
+        private static void DeleteBucket()
+        {
+            var configuration = Construction.GetConfiguration();
+
+            var bucketName = configuration["S3BucketName"];
+
+            using (var s3Client = Construction.GetAmazonS3Client())
+            {
+                var deleteBucketRequest = new DeleteBucketRequest
+                {
+                    BucketName = bucketName,
+                    UseClientRegion = true,
+                };
+
+                var deleteBucketResponse = s3Client.DeleteBucketAsync(deleteBucketRequest).Result;
+
+                Construction.DisplayDeleteBucketResponse(deleteBucketResponse);
+            }
+        }
+
+        private static void DisplayDeleteBucketResponse(DeleteBucketResponse deleteBucketResponse)
+        {
+            var writer = Console.Out;
+
+            writer.WriteLine($"{nameof(deleteBucketResponse.HttpStatusCode)}: {deleteBucketResponse.HttpStatusCode}");
+            Construction.DisplayResponseMetadata(writer, deleteBucketResponse.ResponseMetadata);
+        }
+
         private static void TestIfBucketExists()
         {
             var configuration = Construction.GetConfiguration();

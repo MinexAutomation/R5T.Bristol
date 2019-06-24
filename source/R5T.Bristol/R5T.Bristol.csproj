@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <ProjectReference Include="..\R5T.Bristol.AWS.DetectText\R5T.Bristol.AWS.DetectText.csproj" />
     <ProjectReference Include="..\R5T.Bristol.AWS.S3\R5T.Bristol.AWS.S3.csproj" />
     <ProjectReference Include="..\R5T.Bristol.Lib\R5T.Bristol.Lib.csproj" />
   </ItemGroup>

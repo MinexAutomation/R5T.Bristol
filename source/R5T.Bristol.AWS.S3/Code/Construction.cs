@@ -23,10 +23,10 @@ namespace R5T.Bristol.AWS.S3
             //Construction.TestIfBucketExists(Construction.GenerateRandomBucketName());
             //Construction.TestIfBucketExists();
             //Construction.DeleteBucket();
-            //Construction.UploadFileToS3();
+            Construction.UploadFileToS3();
             //Construction.TestIfFileExists();
             //Construction.TestIfS3ObjectExists("DOES_NOT_EXIST");
-            Construction.DeleteObjectFromS3();
+            //Construction.DeleteObjectFromS3();
         }
 
         private static void DeleteObjectFromS3()

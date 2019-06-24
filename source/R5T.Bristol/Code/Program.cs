@@ -1,5 +1,6 @@
 ﻿using System;
 
+using DetectTextConstruction = R5T.Bristol.AWS.DetectText.Construction;
 using S3Construction = R5T.Bristol.AWS.S3.Construction;
 
 
@@ -9,8 +10,10 @@ namespace R5T.Bristol
     {
         static void Main(string[] args)
         {
+            //S3Construction.SubMain();
+            DetectTextConstruction.SubMain();
+
             //Construction.SubMain();
-            S3Construction.SubMain();
 
             //Program.SubMain();
         }

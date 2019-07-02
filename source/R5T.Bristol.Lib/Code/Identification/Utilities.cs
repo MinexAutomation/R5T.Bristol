@@ -625,7 +625,7 @@ namespace R5T.Bristol.Lib.Identification
 
         public static DescribedResult<bool> IsValidRawCheckedContainerIdentification(string rawCheckedContainerIdentificationValue)
         {
-            var isValid = Utilities.ContainerIdentificationRegex.IsMatch(rawCheckedContainerIdentificationValue);
+            var isValid = Utilities.CheckedContainerIdentificationRegex.IsMatch(rawCheckedContainerIdentificationValue);
             if(!isValid)
             {
                 return DescribedResult.FromValue(false, $"Container identification must be 3 upper-case letters, an upper-case letter, 6 numbers, and a number (11 characters). Example: ZEPU0037255.\nFound: {rawCheckedContainerIdentificationValue}");

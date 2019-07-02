@@ -18,7 +18,15 @@ namespace R5T.Bristol.AWS.DetectText
         public static void SubMain()
         {
             //Construction.DetectTextOnS3ObjectRequest();
-            Construction.DetectTextGetJson();
+            //Construction.DetectTextGetJson();
+            Construction.DeserializeDetectTextResponse();
+        }
+
+        private static void DeserializeDetectTextResponse()
+        {
+            var jsonFilePath = @"C:\Temp\temp.json";
+
+            var detectTextResponse = JsonFileSerializer.Deserialize<DetectTextResponse>(jsonFilePath);
         }
 
         private static void DetectTextGetJson()

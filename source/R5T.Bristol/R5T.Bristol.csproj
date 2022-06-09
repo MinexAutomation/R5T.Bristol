@@ -1,14 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <ProjectReference Include="..\R5T.Bristol.AWS.DetectText\R5T.Bristol.AWS.DetectText.csproj" />
     <ProjectReference Include="..\R5T.Bristol.AWS.S3\R5T.Bristol.AWS.S3.csproj" />
     <ProjectReference Include="..\R5T.Bristol.Lib\R5T.Bristol.Lib.csproj" />
   </ItemGroup>
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591;1573</NoWarn>
   </PropertyGroup>
-
 </Project>
